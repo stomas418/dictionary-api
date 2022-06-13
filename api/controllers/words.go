@@ -4,10 +4,18 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stomas418/dictionary-api/models"
 )
+
+func getJSONWord(dbWord models.DatabaseWord) models.JSONWord {
+	var result models.JSONWord
+	result.Word = dbWord.Word
+	result.Meanings = strings.Split(dbWord.Meanings, ";;")
+	return result
+}
 
 func (h *BaseHandler) GetWord(c *gin.Context) {
 	wordToSearch := c.Param("word")
@@ -40,13 +48,13 @@ func getPageNumber(page string) int {
 	}
 }
 func (h *BaseHandler) GetWords(c *gin.Context) {
-	letter := c.Param("letter")
+	letter := c.Param("letter")[0:1]
 	page := c.Query("page")
 	page_number := getPageNumber(page)
 
 	var databaseWord models.DatabaseWord
 	var databaseWords []models.DatabaseWord
-	page_word_limit := 100
+	const page_word_limit = 100
 	lower_limit := page_word_limit * (page_number - 1)
 	upper_limit := lower_limit + page_word_limit
 
@@ -63,6 +71,9 @@ func (h *BaseHandler) GetWords(c *gin.Context) {
 			databaseWords = append(databaseWords, databaseWord)
 		}
 	}
-
-	c.IndentedJSON(http.StatusOK, databaseWords)
+	var Words [page_word_limit]models.JSONWord
+	for i := 0; i < page_word_limit; i++ {
+		Words[i] = getJSONWord(databaseWords[i])
+	}
+	c.IndentedJSON(http.StatusOK, Words)
 }
