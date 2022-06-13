@@ -36,17 +36,19 @@ The api accepts only two endpoints: `/:letter` and `/:letter/:word` and only the
  - Returns a **page** with 100 words on a JSON array formatted like this:
  
        [
-    	    {
-    			"word": "A",
-    			"meanings": [
-                    "the 1st letter of the Roman alphabet",
-                    "the blood group whose red cells carry the A antigen"
-                ]
-    		},
+    	       {
+    		"word": "A",
+    		"meanings": [
+                    	"the 1st letter of the Roman alphabet",
+                    	"the blood group whose red cells carry the A antigen"
+                	]
+		},
     		{
     	        "word": "A-HORIZON",
-    	        "meanings": "the top layer of a soil profile; usually contains humus"
-    	    },
+    	        "meanings": [
+			"the top layer of a soil profile; usually contains humus"
+			]
+    	        },
     	    ...
         ]
  - Accepts parameter **letter** which is the starting letter for every word returned
